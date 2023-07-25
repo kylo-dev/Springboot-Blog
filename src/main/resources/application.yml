@@ -1,5 +1,7 @@
 server:
   port : 8082
+  servlet:
+    context-path: /blog
 
 # database
 spring:
@@ -19,7 +21,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
