@@ -1,6 +1,5 @@
-package com.blogproject.myblog.controller;
+package com.blogproject.myblog.test;
 
-import com.blogproject.myblog.Member;
 import org.springframework.web.bind.annotation.*;
 
 /**

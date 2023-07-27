@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+  <title>JoinForm</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+</head>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container">
+  <form action="" method="post" class="m-4">
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input class="form-control" id="username" name="username" placeholder="Enter Username" type="text">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input class="form-control" id="password" name="password" placeholder="Enter password" type="password">
+    </div>
+
+    <div class="form-group form-check">
+      <label class="form-check-label">
+        <input class="form-check-input" name="remember" type="checkbox"> Remember me
+      </label>
+    </div>
+    <button class="btn btn-primary" id="btn-login" type="submit">로그인</button>
+  </form>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+<!--<script src="/js/user.js"></script>-->
+</body>
+</html>
+
+
+

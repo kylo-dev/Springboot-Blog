@@ -1,7 +1,7 @@
 server:
   port : 8082
-  servlet:
-    context-path: /blog
+#  servlet:
+#    context-path: /blog
 
 # database
 spring:
@@ -18,7 +18,7 @@ spring:
   # Spring data jpa
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
+    open-in-view: true
     show-sql: true
     hibernate:
       ddl-auto: update
