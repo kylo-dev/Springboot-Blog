@@ -28,7 +28,7 @@ public class Board extends BaseEntity{
     @Column
     private int count; // 조회수
 
-    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
+    @ManyToOne(fetch = FetchType.EAGER) // Many = Board, One = User
     @JoinColumn(name = "user_id")
     private User user; // DB는 오브젝트를 저장할 수 없다. FK, 자바는 가능
 
