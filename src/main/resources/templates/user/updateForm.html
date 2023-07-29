@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+</head>
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container">
+  <form class="m-4">
+    <input type="hidden" id="id" th:value="${principal.user.id}">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input th:value="${principal.user.username}" class="form-control" id="username" placeholder="Enter Username" type="text" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input class="form-control" id="password" placeholder="Enter password" type="password">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input th:value="${principal.user.email}" class="form-control" id="email" placeholder="Enter email" type="email">
+    </div>
+
+  </form>
+  <button id="btn-update" class="btn btn-primary mx-4 mb-2">회원 수정완료</button>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+<script src="/js/user.js"></script>
+
+</body>
+</html>

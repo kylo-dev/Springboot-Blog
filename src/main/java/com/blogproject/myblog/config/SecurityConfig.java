@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -52,9 +53,16 @@ public class SecurityConfig {
      * 해당 password가 무엇으로 해쉬가 되어 회원가입 되었는지 알아야
      * 같은 해쉬로 암호화해서 DB에 있는 값과 비교 후 로그인을 한다.
      */
-    public AuthenticationManager configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(principalDetailService).passwordEncoder(passwordEncoder());
-        return auth.build();
     }
+    //    public AuthenticationManager configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(principalDetailService).passwordEncoder(passwordEncoder());
+//        return auth.build();
+//    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 }

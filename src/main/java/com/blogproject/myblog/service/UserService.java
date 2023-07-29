@@ -6,10 +6,16 @@ import com.blogproject.myblog.entity.UserRole;
 import com.blogproject.myblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +23,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+
+    @PersistenceContext
+    EntityManager em;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -58,5 +67,13 @@ public class UserService {
 
     public User login(User user) {
         return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+    }
+    @Transactional
+    public void update(User requestUser) {
+        User user = userRepository.findById(requestUser.getId()).orElseThrow(()->{
+            return new IllegalArgumentException("글 수정 실패: 아이디를 찾을 수 없습니다.");
+        });
+        user.setPassword(bCryptPasswordEncoder.encode(requestUser.getPassword()));
+        user.setEmail(requestUser.getEmail()); // 회원 수정 함수 종료시 = 서비스 종료 = 트랜잭션 종료 = commit 자동 실행
     }
 }

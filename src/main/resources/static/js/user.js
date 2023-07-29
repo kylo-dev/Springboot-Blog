@@ -3,6 +3,9 @@ let index = {
         $("#btn-save").on("click", ()=>{
             this.save();
         });
+        $("#btn-update").on("click", ()=>{
+            this.update();
+        });
 //        $("#btn-login").on("click", ()=>{
 //            this.login();
 //        });
@@ -38,6 +41,30 @@ let index = {
             alert(JSON.stringify(error));
         });
    },
+   update: function() {
+           let data = {
+               id: $("#id").val(),
+               username: $("#username").val(),
+               password: $("#password").val(),
+               email: $("#email").val()
+           };
+           $.ajax({
+              type: "PUT",
+              url: "/api/user",
+              data: JSON.stringify(data),
+              contentType: "application/json; charset=utf-8", // body 데이터가 어떤 타입인지
+              dataType: "json" // 요청을 서버로 해서 응답이 왔을 때
+           }).done(function(res) {
+               alert("회원수정이 완료되었습니다.");
+               location.href = "/";
+           }).fail(function(error) {
+               alert(JSON.stringify(error));
+           });
+      }
+}
+
+index.init();
+
 
 //   login: function() {
 //           let data = {
@@ -57,6 +84,3 @@ let index = {
 //               alert(JSON.stringify(error));
 //           });
 //      }
-}
-
-index.init();

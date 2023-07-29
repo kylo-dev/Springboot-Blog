@@ -24,6 +24,7 @@ public class BoardService {
     public void write(Board board, User user) {
         board.setCount(0);
         board.setUser(user);
+        // user.getBoards().add(board);
         boardRepository.save(board);
     }
 
@@ -49,7 +50,7 @@ public class BoardService {
     @Transactional
     public void update(Long id, Board requestBoard) {
          Board board = boardRepository.findById(id).orElseThrow(()->{
-                        return new IllegalArgumentException("글 찾기를 실패 : 아이디를 찾을 수 없습니다.");
+                        return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
                     }); // 영속화 완료
          board.setTitle(requestBoard.getTitle());
          board.setContent(requestBoard.getContent()); // 해당 함수 종료시에 트랜잭션이 종료 -> Dirty Checking 발생!
