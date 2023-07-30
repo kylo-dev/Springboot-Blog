@@ -16,13 +16,14 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String username; // 아이디
 
     @Column(nullable = false) // 123456 => 해쉬 (비밀번호 암호화)
@@ -33,6 +34,9 @@ public class User extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private UserRole role; // Enum을 쓰는게 좋음. - admin, user, manager
+
+    @Column
+    private String oauth;
 
     @OneToMany(mappedBy = "user")
     private List<Board> boards = new ArrayList<>();

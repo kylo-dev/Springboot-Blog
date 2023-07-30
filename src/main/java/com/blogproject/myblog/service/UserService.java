@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public void save(User user){
@@ -65,15 +67,31 @@ public class UserService {
         }
     }
 
+    public User validationDuplicator(User requestUser){
+        User user = userRepository.findByUsername(requestUser.getUsername()).orElseGet(()->{
+            return new User();
+        });
+        return user;
+    }
+
     public User login(User user) {
         return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
+
     @Transactional
     public void update(User requestUser) {
         User user = userRepository.findById(requestUser.getId()).orElseThrow(()->{
-            return new IllegalArgumentException("글 수정 실패: 아이디를 찾을 수 없습니다.");
+            return new IllegalArgumentException("회원 정보 수정 실패: 아이디를 찾을 수 없습니다.");
         });
-        user.setPassword(bCryptPasswordEncoder.encode(requestUser.getPassword()));
-        user.setEmail(requestUser.getEmail()); // 회원 수정 함수 종료시 = 서비스 종료 = 트랜잭션 종료 = commit 자동 실행
+
+        // validate 체크 => oauth필드에 값이 없어야 수정 가능
+        if (user.getOauth() == null || user.getOauth().equals("")) {
+            user.setPassword(bCryptPasswordEncoder.encode(requestUser.getPassword()));
+            user.setEmail(requestUser.getEmail()); // 회원 수정 함수 종료시 = 서비스 종료 = 트랜잭션 종료 = commit 자동 실행
+        }
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(requestUser.getUsername(), requestUser.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

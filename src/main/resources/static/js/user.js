@@ -35,7 +35,7 @@ let index = {
                 location.href = "/";
             } else {
                 alert("이미 존재하는 회원입니다.");
-                location.href = "/auth/joinform";
+                location.href = "/auth/joinForm";
             }
         }).fail(function(error) {
             alert(JSON.stringify(error));
