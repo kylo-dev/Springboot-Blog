@@ -1,5 +1,6 @@
 package com.blogproject.myblog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,8 +40,10 @@ public class User extends BaseEntity{
     private String oauth;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Reply> replies = new ArrayList<>();
 }

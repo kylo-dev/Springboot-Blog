@@ -2,6 +2,7 @@ package com.blogproject.myblog.controller;
 
 import com.blogproject.myblog.config.auth.PrincipalDetail;
 import com.blogproject.myblog.service.BoardService;
+import com.blogproject.myblog.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

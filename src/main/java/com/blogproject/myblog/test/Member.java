@@ -2,8 +2,7 @@ package com.blogproject.myblog.test;
 
 import lombok.*;
 
-//@Getter
-//@Setter
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

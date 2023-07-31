@@ -33,6 +33,18 @@ public class Board extends BaseEntity{
     private User user; // DB는 오브젝트를 저장할 수 없다. FK, 자바는 가능
 
     @OneToMany(mappedBy = "board")
+    @OrderBy("id desc")
     private List<Reply> replies = new ArrayList<>();
+
+    //== 연관관계 메서드 ==//
+    public void setUser(User user) {
+        this.user = user;
+        user.getBoards().add(this);
+    }
+
+    public void addReplies(Reply reply) {
+        replies.add(reply);
+        reply.setBoard(this);
+    }
 
 }
