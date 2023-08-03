@@ -1,6 +1,7 @@
 package com.blogproject.myblog.controller.api;
 
 import com.blogproject.myblog.config.auth.PrincipalDetail;
+import com.blogproject.myblog.dto.ReplySaveRequestDto;
 import com.blogproject.myblog.dto.ResponseDto;
 import com.blogproject.myblog.entity.Board;
 import com.blogproject.myblog.entity.Reply;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.Path;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,12 +37,25 @@ public class BoardApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
+//    @PostMapping("/api/board/{boardId}/reply")
+//    public ResponseDto<Integer> replySave(@PathVariable Long boardId,
+//                                          @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+//        System.out.println("writeReply() 실행 전");
+//        boardService.writeReply(principal.getUser(), boardId, reply);
+//        System.out.println("writeReply() 실행 후");
+//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+//    }
+
+    // 데이터를 받을 때 컨트롤러에서 dto를 만들어서 받는게 좋다
     @PostMapping("/api/board/{boardId}/reply")
-    public ResponseDto<Integer> replySave(@PathVariable Long boardId,
-                                          @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
-        System.out.println("writeReply() 실행 전");
-        boardService.writeReply(principal.getUser(), boardId, reply);
-        System.out.println("writeReply() 실행 후");
+    public ResponseDto<Integer> replySaveDto(@RequestBody ReplySaveRequestDto replySaveRequestDto) {
+        boardService.writeReply(replySaveRequestDto);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+    }
+
+    @DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+    public ResponseDto<Integer> replyDelete(@PathVariable Long boardId, @PathVariable Long replyId) {
+        boardService.deleteReply(replyId);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 }

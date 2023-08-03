@@ -1,5 +1,6 @@
 package com.blogproject.myblog.service;
 
+import com.blogproject.myblog.dto.ReplySaveRequestDto;
 import com.blogproject.myblog.entity.Board;
 import com.blogproject.myblog.entity.Reply;
 import com.blogproject.myblog.entity.User;
@@ -28,7 +29,11 @@ public class BoardService {
     @Transactional
     public void write(Board board, User user) {
         board.setCount(0);
-        board.setUser(user);
+        User findUser = userRepository.findById(user.getId())
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("글 찾기 실패 : 게시글 id를 찾을 수 없습니다.");
+                });
+        board.setUser(findUser);
         // user.getBoards().add(board);
         boardRepository.save(board);
     }
@@ -71,9 +76,44 @@ public class BoardService {
         User registerUser = userRepository.findById(user.getId()).orElseThrow(()->{
             return new IllegalArgumentException("아이디 찾기 실패 : 아이디를 찾을 수 없습니다.");
         });
+        for (Reply userReply: registerUser.getReplies()) {
+            System.out.println("set 하기 직전 유저의 댓글 확인 : " + userReply.getContent());
+        }
+        for (Reply userReply: findById(boardId).getReplies()) {
+            System.out.println("set 유저의 댓글 확인 : " + userReply.getContent());
+        }
         reply.setUser(registerUser);
         reply.setBoard(findById(boardId));
         replyRepository.save(reply);
         System.out.println("replyRepository에 저장");
+        System.out.println("해당 유저의 댓글 개수 : " + registerUser.getReplies().size());
+        for (Reply userReply: registerUser.getReplies()) {
+            System.out.println("유저의 댓글 확인 : " + userReply.getContent());
+        }
+        System.out.println("해당 댓글의 댓글 개수 : " + findById(boardId).getReplies().size());
+        for (Reply userReply: findById(boardId).getReplies()) {
+            System.out.println("유저의 댓글 확인 : " + userReply.getContent());
+        }
+    }
+
+    @Transactional
+    public void writeReply(ReplySaveRequestDto replySaveRequestDto) {
+        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()->{
+            return new IllegalArgumentException("아이디 찾기 실패 : 아이디를 찾을 수 없습니다.");
+        }); // 영속화
+
+        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()->{
+            return new IllegalArgumentException("게시글 찾기 실패 : 게시글을 찾을 수 없습니다.");
+        }); // 영속화
+
+        Reply reply = Reply.createReply(user, board, replySaveRequestDto.getContent());
+
+        replyRepository.save(reply);
+//        replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+    }
+
+    @Transactional
+    public void deleteReply(Long replyId) {
+        replyRepository.deleteById(replyId);
     }
 }

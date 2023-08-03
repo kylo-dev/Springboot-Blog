@@ -32,7 +32,7 @@ public class Board extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user; // DB는 오브젝트를 저장할 수 없다. FK, 자바는 가능
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @OrderBy("id desc")
     private List<Reply> replies = new ArrayList<>();
 

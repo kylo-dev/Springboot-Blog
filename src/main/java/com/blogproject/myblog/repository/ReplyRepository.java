@@ -1,8 +1,16 @@
 package com.blogproject.myblog.repository;
 
+import com.blogproject.myblog.dto.ReplySaveRequestDto;
 import com.blogproject.myblog.entity.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
+    // 네이티브 쿼리로 댓글 작성하기
+    @Modifying
+    @Query(value = "INSERT INTO reply(user_id, board_id, content, created_time) VALUES(?1,?2,?3, now())", nativeQuery = true)
+    int mSave(Long userId, Long boardId, String content); // 업데이트된 행의 개수를 리턴해줌
 }

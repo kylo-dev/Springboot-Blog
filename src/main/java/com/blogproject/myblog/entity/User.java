@@ -39,11 +39,9 @@ public class User extends BaseEntity{
     @Column
     private String oauth;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 }
