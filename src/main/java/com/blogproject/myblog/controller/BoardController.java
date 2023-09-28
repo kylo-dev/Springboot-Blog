@@ -35,7 +35,7 @@ public class BoardController {
     // 글 세부내용 보기
     @GetMapping("/board/{id}")
     public String boardById(@PathVariable Long id, Model model, @AuthenticationPrincipal PrincipalDetail principal) {
-        model.addAttribute("board", boardService.findById(id));
+        model.addAttribute("board", boardService.findBoardWithUser(id));
         model.addAttribute("principal", principal);
         return "board/detail";
     }

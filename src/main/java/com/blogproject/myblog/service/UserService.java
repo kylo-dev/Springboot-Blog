@@ -35,7 +35,7 @@ public class UserService {
 
     @Transactional
     public void save(User user){
-        validationDuplicateUser(user);
+        validationDuplicateUser(user); // 중복 회원 확인
         String encPassword = bCryptPasswordEncoder.encode(user.getPassword()); // password 암호화
         user.setPassword(encPassword);
         user.setRole(UserRole.USER);
@@ -53,8 +53,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        List<User> userList = userRepository.findAll();
-        return userList;
+        return userRepository.findAll();
     }
 
     /**
@@ -63,7 +62,7 @@ public class UserService {
     private void validationDuplicateUser(User user){
         Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
         if (optionalUser.isPresent()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("중복 회원입니다. 다른 아이디를 사용해주세요");
         }
     }
 

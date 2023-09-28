@@ -1,13 +1,14 @@
-package com.blogproject.myblog.dto;
+package com.blogproject.myblog.dto.user;
 
+import com.blogproject.myblog.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateUserResponseDto {
+public class UserDto {
 
-    private Long id;
     private String username;
     private String email;
+    private UserRole role;
 }

@@ -1,7 +1,5 @@
 server:
   port : 8082
-#  servlet:
-#    context-path: /blog
 
 # database
 spring:
@@ -18,12 +16,17 @@ spring:
   # Spring data jpa
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: true
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
 cos:
   key: cos1234

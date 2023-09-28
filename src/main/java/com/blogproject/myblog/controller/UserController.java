@@ -1,6 +1,7 @@
 package com.blogproject.myblog.controller;
 
 import com.blogproject.myblog.config.auth.PrincipalDetail;
+import com.blogproject.myblog.dto.user.UpdateUserRequest;
 import com.blogproject.myblog.entity.KakaoProfile;
 import com.blogproject.myblog.entity.OAuthToken;
 import com.blogproject.myblog.entity.User;

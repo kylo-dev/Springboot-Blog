@@ -1,6 +1,6 @@
 package com.blogproject.myblog.service;
 
-import com.blogproject.myblog.dto.ReplySaveRequestDto;
+import com.blogproject.myblog.dto.reply.ReplySaveRequestDto;
 import com.blogproject.myblog.entity.Board;
 import com.blogproject.myblog.entity.Reply;
 import com.blogproject.myblog.entity.User;

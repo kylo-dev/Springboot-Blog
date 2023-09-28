@@ -1,37 +1,21 @@
 package com.blogproject.myblog.controller.api;
 
-import com.blogproject.myblog.config.auth.PrincipalDetail;
 import com.blogproject.myblog.dto.ResponseDto;
 import com.blogproject.myblog.dto.Result;
-import com.blogproject.myblog.dto.UpdateUserResponseDto;
-import com.blogproject.myblog.dto.UserDto;
-import com.blogproject.myblog.entity.KakaoProfile;
-import com.blogproject.myblog.entity.OAuthToken;
+import com.blogproject.myblog.dto.user.JoinUserDto;
+import com.blogproject.myblog.dto.user.UpdateUserRequest;
+import com.blogproject.myblog.dto.user.UpdateUserResponseDto;
+import com.blogproject.myblog.dto.user.UserDto;
 import com.blogproject.myblog.entity.User;
-import com.blogproject.myblog.entity.UserRole;
-import com.blogproject.myblog.handler.GlobalExceptionHandler;
 import com.blogproject.myblog.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -44,25 +28,41 @@ public class UserApiController {
 
     // 회원가입 요청
     @PostMapping("/auth/api/user")
-    public ResponseDto<Integer> save(@RequestBody User user) {
+    public ResponseDto<Integer> save(@RequestBody JoinUserDto joinUserDto) {
         System.out.println("UserApiController: save() 호출");
+        User user = User.builder()
+                        .username(joinUserDto.getUsername())
+                        .password(joinUserDto.getPassword())
+                        .email(joinUserDto.getEmail())
+                        .build();
         userService.save(user);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
-    // 회원정보 수정 요청
+    // 회원정보 수정 V1
     @PutMapping("/api/user")
-    public ResponseDto<Integer> update(@RequestBody User user) {
+    public ResponseDto<Integer> update(@RequestBody UpdateUserRequest request) {
+        User user = User.builder()
+                        .id(request.getId())
+                        .username(request.getUsername())
+                        .password(request.getPassword())
+                        .email(request.getEmail())
+                        .build();
         userService.update(user); // 여기서는 트랜잭션이 종료되어 DB 값은 변경. but, 세션값은 변경되지 않은 상태
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
-    // 회원 수정 API
+    // 회원정보 수정 API V2
     @PutMapping("/api/users/{id}")
-    public UpdateUserResponseDto updateV2(@PathVariable("id") Long id, @RequestBody User user) {
+    public UpdateUserResponseDto updateV2(@PathVariable("id") Long id, @RequestBody UpdateUserRequest request) {
+        User user = User.builder()
+                .id(id)
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .email(request.getEmail())
+                .build();
         userService.update(user);
-        User findUser = userService.findById(id);
-        return new UpdateUserResponseDto(findUser.getId(), findUser.getUsername(), findUser.getEmail());
+        return new UpdateUserResponseDto(id, request.getUsername(), request.getEmail());
     }
 
     // 모든 회원 조회 API
@@ -77,7 +77,7 @@ public class UserApiController {
     }
 
 
-//     전통적인 로그인 방법
+//     일반적인 로그인 방법 (Security 사용 X)
 //    @PostMapping("/api/user/login")
 //    public ResponseDto<Integer> login(@RequestBody User user, HttpSession session) {
 //        System.out.println("UserApiController: login() 호출");

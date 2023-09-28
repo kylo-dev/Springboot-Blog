@@ -1,6 +1,5 @@
 package com.blogproject.myblog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@Getter
-//@Setter
+
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class User extends BaseEntity{
 

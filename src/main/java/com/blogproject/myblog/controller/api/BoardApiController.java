@@ -1,23 +1,20 @@
 package com.blogproject.myblog.controller.api;
 
 import com.blogproject.myblog.config.auth.PrincipalDetail;
-import com.blogproject.myblog.dto.BoardDto;
-import com.blogproject.myblog.dto.ReplySaveRequestDto;
+import com.blogproject.myblog.dto.board.BoardDto;
+import com.blogproject.myblog.dto.reply.ReplySaveRequestDto;
 import com.blogproject.myblog.dto.ResponseDto;
 import com.blogproject.myblog.dto.Result;
 import com.blogproject.myblog.entity.Board;
-import com.blogproject.myblog.entity.Reply;
 import com.blogproject.myblog.service.BoardService;
 import com.blogproject.myblog.service.ReplyService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +43,7 @@ public class BoardApiController {
         return new BoardDto(findBoard.getTitle(), findBoard.getContent(),findBoard.getCount());
     }
 
-    // 글 작성
+    // 게시판 작성
     @PostMapping("/api/board")
     public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) {
         boardService.write(board, principal.getUser());
@@ -116,6 +113,7 @@ public class BoardApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
+    // 게시판에 작성된 댓글 삭제
     @DeleteMapping("/api/board/{boardId}/reply/{replyId}")
     public ResponseDto<Integer> replyDelete(@PathVariable Long boardId, @PathVariable Long replyId) {
         replyService.deleteReply(replyId);

@@ -1,10 +1,6 @@
 package com.blogproject.myblog.service;
 
-import com.blogproject.myblog.dto.BoardDto;
-import com.blogproject.myblog.dto.ReplySaveRequestDto;
-import com.blogproject.myblog.dto.Result;
 import com.blogproject.myblog.entity.Board;
-import com.blogproject.myblog.entity.Reply;
 import com.blogproject.myblog.entity.User;
 import com.blogproject.myblog.repository.BoardRepository;
 import com.blogproject.myblog.repository.ReplyRepository;
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +26,7 @@ public class BoardService {
     // User 정보 매핑
     @Transactional
     public Long write(Board board, User user) {
-        board.setCount(0);
+        board.setCount(0); // 조회수 0으로 설정
         User findUser = userRepository.findById(user.getId())
                 .orElseThrow(()->{
                     return new IllegalArgumentException("글 찾기 실패 : 작성자 id를 찾을 수 없습니다.");
@@ -55,6 +50,13 @@ public class BoardService {
 
     public Board findById(Long id) {
         return boardRepository.findById(id)
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("글 찾기 실패 : 게시글 id를 찾을 수 없습니다.");
+                });
+    }
+
+    public Board findBoardWithUser(Long id) {
+        return boardRepository.findBoardWithUser(id)
                 .orElseThrow(()->{
                     return new IllegalArgumentException("글 찾기 실패 : 게시글 id를 찾을 수 없습니다.");
                 });
