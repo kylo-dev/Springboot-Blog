@@ -8,6 +8,7 @@
 
 <div class="container mt-2">
   <button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
+  <!-- 글 작성자만 수정 및 삭제 가능 -->
   <th:block th:if="${board.user.id == principal.user.id}">
     <a th:href="@{|/board/${board.id}/updateForm|}" class="btn btn-warning">수정</a>
     <button class="btn btn-danger" id="btn-delete">삭제</button>
@@ -28,6 +29,7 @@
   </div>
   <hr />
 
+  <!-- 댓글 작성 -->
   <div class="card">
     <form>
       <input type="hidden" id="userId" th:value="${principal.user.id}">
@@ -41,6 +43,7 @@
     </form>
   </div>
   <br />
+  <!-- 댓글 리스트 -->
   <div class="card mb-2">
     <div class="card-header">댓글 리스트</div>
     <ul id="reply-box" class="list-group">

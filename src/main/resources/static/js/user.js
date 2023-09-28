@@ -64,23 +64,3 @@ let index = {
 }
 
 index.init();
-
-
-//   login: function() {
-//           let data = {
-//               username: $("#username").val(),
-//               password: $("#password").val()
-//           };
-//           $.ajax({
-//              type: "POST",
-//              url: "/api/user/login",
-//              data: JSON.stringify(data),
-//              contentType: "application/json; charset=utf-8", // body 데이터가 어떤 타입인지
-//              dataType: "json" // 요청을 서버로 해서 응답이 왔을 때
-//           }).done(function(res) {
-//               alert("로그인이 완료되었습니다.");
-//               location.href = "/";
-//           }).fail(function(error) {
-//               alert(JSON.stringify(error));
-//           });
-//      }

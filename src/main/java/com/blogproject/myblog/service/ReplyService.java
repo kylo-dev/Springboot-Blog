@@ -1,5 +1,6 @@
 package com.blogproject.myblog.service;
 
+import com.blogproject.myblog.dto.ReplySaveRequestDto;
 import com.blogproject.myblog.entity.Board;
 import com.blogproject.myblog.entity.Reply;
 import com.blogproject.myblog.entity.User;
@@ -38,4 +39,24 @@ public class ReplyService {
         return reply;
     }
 
+    @Transactional
+    public void writeReply(ReplySaveRequestDto replySaveRequestDto) {
+        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()->{
+            return new IllegalArgumentException("아이디 찾기 실패 : 아이디를 찾을 수 없습니다.");
+        }); // 영속화
+
+        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()->{
+            return new IllegalArgumentException("게시글 찾기 실패 : 게시글을 찾을 수 없습니다.");
+        }); // 영속화
+
+        Reply reply = Reply.createReply(user, board, replySaveRequestDto.getContent());
+
+        replyRepository.save(reply);
+//        replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+    }
+
+    @Transactional
+    public void deleteReply(Long replyId) {
+        replyRepository.deleteById(replyId);
+    }
 }

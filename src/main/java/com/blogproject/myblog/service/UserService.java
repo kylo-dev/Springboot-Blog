@@ -5,6 +5,7 @@ import com.blogproject.myblog.entity.User;
 import com.blogproject.myblog.entity.UserRole;
 import com.blogproject.myblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,7 +59,6 @@ public class UserService {
 
     /**
      * 중복 회원 검사
-     * @Param username
      */
     private void validationDuplicateUser(User user){
         Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());

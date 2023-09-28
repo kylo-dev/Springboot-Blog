@@ -27,7 +27,7 @@ public class SecurityConfig {
         httpSecurity
                 .csrf().disable() // csrf 토큰 비활성화
                 .authorizeHttpRequests() // 어떤 request 요청이 온다면 ->
-                .antMatchers("/","/auth/**","/js/**", "/css/**", "/image/**") // 해당 경로들은 인증없이 이용 가능
+                .antMatchers("/","/auth/**","/js/**", "/css/**", "/image/**", "/api/**") // 해당 경로들은 인증없이 이용 가능
                 .permitAll() // 접근 허용
                 .anyRequest() // 다른 요청들의 경우
                 .authenticated() // 인증이 필요함 - 없는 경우 접근 제한 페이지를 보여줌

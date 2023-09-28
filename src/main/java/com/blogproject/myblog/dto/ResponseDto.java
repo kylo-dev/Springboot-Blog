@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseDto<T> {
-//    HttpStatus status;
+    // HttpStatus status;
     int status;
     T data;
 }

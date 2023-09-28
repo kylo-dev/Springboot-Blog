@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     // 네이티브 쿼리로 댓글 작성하기
-    @Modifying
-    @Query(value = "INSERT INTO reply(user_id, board_id, content, created_time) VALUES(?1,?2,?3, now())", nativeQuery = true)
-    int mSave(Long userId, Long boardId, String content); // 업데이트된 행의 개수를 리턴해줌
+//    @Modifying
+//    @Query(value = "INSERT INTO reply(user_id, board_id, content, created_time) VALUES(?1,?2,?3, now())", nativeQuery = true)
+//    int mSave(Long userId, Long boardId, String content); // 업데이트된 행의 개수를 리턴해줌
 }

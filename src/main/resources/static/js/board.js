@@ -62,7 +62,7 @@ let index = {
              contentType: "application/json; charset=utf-8",
              dataType: "json"
           }).done(function(res) {
-              alert("글수정이 완료되었습니다.");
+              alert("글 수정이 완료되었습니다.");
               location.href = "/";
           }).fail(function(error) {
               alert(JSON.stringify(error));

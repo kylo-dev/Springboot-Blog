@@ -26,11 +26,13 @@ public class BoardController {
         return "index";
     }
 
+    // 글 작성 Form으로 이동
     @GetMapping("/board/saveForm")
     public String saveForm() {
         return "board/saveForm";
     }
 
+    // 글 세부내용 보기
     @GetMapping("/board/{id}")
     public String boardById(@PathVariable Long id, Model model, @AuthenticationPrincipal PrincipalDetail principal) {
         model.addAttribute("board", boardService.findById(id));
