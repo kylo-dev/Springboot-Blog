@@ -11,6 +11,7 @@ import com.blogproject.myblog.service.ReplyService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +29,10 @@ public class BoardApiController {
     // 모든 게시판 조회 API
     @GetMapping("/api/boards")
     public Result findBoards(){
-        List<Board> findBoards = boardService.findAll();
+        List<Board> findBoards = boardService.findAllBoardWithUser();
 
         List<BoardDto> result = findBoards.stream()
-                .map(b -> new BoardDto(b.getTitle(), b.getContent(), b.getCount()))
+                .map(b -> new BoardDto(b.getTitle(), b.getContent(), b.getCount(), b.getUser().getId()))
                 .collect(Collectors.toList());
         return new Result(result, result.size());
     }
@@ -40,12 +41,16 @@ public class BoardApiController {
     @GetMapping("/api/board/{id}")
     public BoardDto findBoard(@PathVariable("id") Long id) {
         Board findBoard = boardService.findById(id);
-        return new BoardDto(findBoard.getTitle(), findBoard.getContent(),findBoard.getCount());
+        return new BoardDto(findBoard.getTitle(), findBoard.getContent(),findBoard.getCount(), findBoard.getUser().getId());
     }
 
-    // 게시판 작성
+    // 게시판 생성 API 1
     @PostMapping("/api/board")
-    public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) {
+    public ResponseDto<Integer> save(@RequestBody BoardDto boardDto, @AuthenticationPrincipal PrincipalDetail principal) {
+        Board board = Board.builder()
+                        .title(boardDto.getTitle())
+                        .content(boardDto.getContent())
+                        .build();
         boardService.write(board, principal.getUser());
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
@@ -53,9 +58,33 @@ public class BoardApiController {
     @PostMapping("/api/board/v2")
     public CreateResponse saveV2(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) {
         Long id = boardService.write(board, principal.getUser());
-
         Board findBoard = boardService.findById(id);
         return new CreateResponse(findBoard.getUser().getId());
+    }
+
+    // 게시판 삭제 API 1
+    @DeleteMapping("/api/board/{id}")
+    public ResponseDto<Integer> deleteById(@PathVariable Long id) {
+        try {
+            boardService.deleteById(id);
+        } catch (EmptyResultDataAccessException e){
+            return new ResponseDto<Integer>(HttpStatus.BAD_REQUEST.value(), 0);
+        }
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+    }
+
+    // 게시판 삭제 API 2
+    @DeleteMapping("/api/board/v2/{id}")
+    public CreateResponse deleteV2(@PathVariable Long id) {
+        boardService.deleteById(id);
+        return new CreateResponse(id);
+    }
+
+    // 게시판 수정 API 1
+    @PutMapping("/api/board/{id}")
+    public ResponseDto<Integer> update(@PathVariable Long id, @RequestBody BoardDto boardDto) {
+        boardService.update(id, boardDto.getTitle(), boardDto.getContent());
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
     @Data
@@ -63,48 +92,6 @@ public class BoardApiController {
     static class CreateResponse {
         private Long boardId;
     }
-
-    @DeleteMapping("/api/board/{id}")
-    public ResponseDto<Integer> deleteById(@PathVariable Long id) {
-        boardService.deleteById(id);
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-    }
-
-    // 게시판 삭제 API
-    @DeleteMapping("/api/board/v2/{id}")
-    public CreateResponse deleteV2(@PathVariable Long id) {
-        boardService.deleteById(id);
-        return new CreateResponse(id);
-    }
-
-    @PutMapping("/api/board/{id}")
-    public ResponseDto<Integer> update(@PathVariable Long id, @RequestBody Board board) {
-        boardService.update(id, board);
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-    }
-
-    // 게시판 수정 API
-    @PutMapping("/api/board/v2/{id}")
-    public CreateResponse updateV2(@PathVariable Long id, @RequestBody UpdateRequest request) {
-        Long boardId = boardService.updateV2(id, request.getTitle(), request.getContent());
-        return new CreateResponse(boardId);
-    }
-
-    @Data
-    static class UpdateRequest {
-        private String title;
-        private String content;
-    }
-
-
-//    @PostMapping("/api/board/{boardId}/reply")
-//    public ResponseDto<Integer> replySave(@PathVariable Long boardId,
-//                                          @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
-//        System.out.println("writeReply() 실행 전");
-//        boardService.writeReply(principal.getUser(), boardId, reply);
-//        System.out.println("writeReply() 실행 후");
-//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-//    }
 
     // 게시판에 댓글 작성
     @PostMapping("/api/board/{boardId}/reply")
@@ -119,4 +106,13 @@ public class BoardApiController {
         replyService.deleteReply(replyId);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
+
+    //    @PostMapping("/api/board/{boardId}/reply")
+//    public ResponseDto<Integer> replySave(@PathVariable Long boardId,
+//                                          @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+//        System.out.println("writeReply() 실행 전");
+//        boardService.writeReply(principal.getUser(), boardId, reply);
+//        System.out.println("writeReply() 실행 후");
+//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+//    }
 }

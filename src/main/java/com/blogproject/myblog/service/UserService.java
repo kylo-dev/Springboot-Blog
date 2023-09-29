@@ -56,6 +56,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
     /**
      * 중복 회원 검사
      */

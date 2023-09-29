@@ -9,6 +9,7 @@ import com.blogproject.myblog.dto.user.UserDto;
 import com.blogproject.myblog.entity.User;
 import com.blogproject.myblog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.BindingResult;
@@ -74,6 +75,16 @@ public class UserApiController {
                 .map(u -> new UserDto(u.getUsername(), u.getEmail(), u.getRole()))
                 .collect(Collectors.toList());
         return new Result(result, result.size());
+    }
+
+    @DeleteMapping("/api/users/{id}")
+    public ResponseDto<Integer> deleteUser(@PathVariable("id") Long id) {
+        try {
+            userService.deleteById(id);
+        } catch(EmptyResultDataAccessException e){
+            return new ResponseDto<Integer>(HttpStatus.BAD_REQUEST.value(), 0);
+        }
+        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 
 

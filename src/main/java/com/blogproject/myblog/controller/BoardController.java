@@ -40,6 +40,7 @@ public class BoardController {
         return "board/detail";
     }
 
+    // 글 수정 Form으로 이동
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.findById(id));

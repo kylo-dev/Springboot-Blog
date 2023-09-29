@@ -1,7 +1,6 @@
 package com.blogproject.myblog.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -13,6 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Board extends BaseEntity{
 
     @Id

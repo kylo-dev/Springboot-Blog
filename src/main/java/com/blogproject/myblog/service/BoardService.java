@@ -43,9 +43,8 @@ public class BoardService {
         return boardPage;
     }
 
-    public List<Board> findAll() {
-        List<Board> findBoards = boardRepository.findAll();
-        return findBoards;
+    public List<Board> findAllBoardWithUser() {
+        return boardRepository.findAllBoardWithUser();
     }
 
     public Board findById(Long id) {
@@ -68,26 +67,23 @@ public class BoardService {
     }
 
     @Transactional
-    public void update(Long id, Board requestBoard) {
-         Board board = boardRepository.findById(id).orElseThrow(()->{
-                        return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
-                    }); // 영속화 완료
-         board.setTitle(requestBoard.getTitle());
-         board.setContent(requestBoard.getContent()); // 해당 함수 종료시에 트랜잭션이 종료 -> Dirty Checking 발생!
-    }
-
-    @Transactional
     @Modifying(clearAutomatically = true)
-    public Long updateV2(Long id, String title, String content) {
+    public void update(Long id, String title, String content) {
         Board board = boardRepository.findById(id).orElseThrow(()->{
-            return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
+            return new IllegalArgumentException("글 찾기 실패 : 게시판을 찾을 수 없습니다.");
         }); // 영속화 완료
-
         board.setTitle(title);
         board.setContent(content); // 해당 함수 종료시에 트랜잭션이 종료 -> Dirty Checking 발생!
-
-        return board.getId();
     }
+
+//    @Transactional
+//    public void update(Long id, Board requestBoard) {
+//         Board board = boardRepository.findById(id).orElseThrow(()->{
+//                        return new IllegalArgumentException("글 찾기 실패 : 게시판을 찾을 수 없습니다.");
+//                    }); // 영속화 완료
+//         board.setTitle(requestBoard.getTitle());
+//         board.setContent(requestBoard.getContent()); // 해당 함수 종료시에 트랜잭션이 종료 -> Dirty Checking 발생!
+//    }
 
 //    @Transactional
 //    public void writeReply(User user, Long boardId, Reply reply) {

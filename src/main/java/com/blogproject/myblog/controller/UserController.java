@@ -63,7 +63,8 @@ public class UserController {
     }
 
     @GetMapping("/auth/kakao/callback")
-    public String kakaoCallback(String code) { // Data를 return 하는 컨트롤러 함수
+    public String kakaoCallback(String code) {
+        // Data를 return 하는 컨트롤러 함수
         // POST 방식으로 key=value 데이터를 요청 -> 카카오
         RestTemplate rt = new RestTemplate();
 
