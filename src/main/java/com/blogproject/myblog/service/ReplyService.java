@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,14 +26,12 @@ public class ReplyService {
     public Reply createReply(User user, Board board, String content) {
 
         // 유저 조회
-        User findUser = userRepository.findById(user.getId()).orElseThrow(()->{
-            return new IllegalArgumentException("회원 찾기 실패: 아이디를 찾을 수 없습니다.");
-        });
+        User findUser = userRepository.findById(user.getId()).orElseThrow(()->
+                new IllegalArgumentException("회원 찾기 실패: 아이디를 찾을 수 없습니다."));
 
         // 글 조회
-        Board findBoard = boardRepository.findById(board.getId()).orElseThrow(()->{
-            return new IllegalArgumentException("글 찾기 실패 : 해당 글을 찾을 수 없습니다.");
-        });
+        Board findBoard = boardRepository.findById(board.getId()).orElseThrow(()->
+                new IllegalArgumentException("글 찾기 실패 : 해당 글을 찾을 수 없습니다."));
 
         // 댓글 생성
         Reply reply = Reply.createReply(findUser, findBoard, content);
@@ -41,22 +41,27 @@ public class ReplyService {
 
     @Transactional
     public void writeReply(ReplySaveRequestDto replySaveRequestDto) {
-        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()->{
-            return new IllegalArgumentException("아이디 찾기 실패 : 아이디를 찾을 수 없습니다.");
-        }); // 영속화
+        User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()->
+                new IllegalArgumentException("아이디 찾기 실패 : 아이디를 찾을 수 없습니다.")); // 영속화
 
-        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()->{
-            return new IllegalArgumentException("게시글 찾기 실패 : 게시글을 찾을 수 없습니다.");
-        }); // 영속화
+        Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()->
+                new IllegalArgumentException("게시글 찾기 실패 : 게시글을 찾을 수 없습니다.")); // 영속화
 
         Reply reply = Reply.createReply(user, board, replySaveRequestDto.getContent());
 
         replyRepository.save(reply);
-//        replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
     }
 
     @Transactional
     public void deleteReply(Long replyId) {
         replyRepository.deleteById(replyId);
+    }
+
+    public List<Reply> findReplyByUser(Long userId){
+        return replyRepository.findReplyByUser(userId);
+    }
+
+    public List<Reply> findReplyByBoard(Long boardId) {
+        return replyRepository.findReplyByBoard(boardId);
     }
 }
